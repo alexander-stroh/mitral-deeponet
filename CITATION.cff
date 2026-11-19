@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+message: "If you use this software or the model weights, please cite the article and the dataset below."
+title: "mitral-deeponet: Deep Operator Network with test-time adaptation for 4D mitral regurgitation flow"
+version: 1.0.0
+type: software
+license: MIT
+authors:
+  - family-names: Hoffmann
+    given-names: Jakob Marcel
+  - family-names: Hasegawa
+    given-names: Yosuke
+    orcid: "https://orcid.org/0000-0002-1878-972X"
+  - family-names: Stroh
+    given-names: Alexander
+    orcid: "https://orcid.org/0000-0003-0850-9883"
+preferred-citation:
+  type: article
+  title: "Reconstruction of 4D Mitral Regurgitation Hemodynamics from Sparse Planar Data using Deep Operator Networks with Test-Time Adaptation"
+  authors:
+    - family-names: Hoffmann
+      given-names: Jakob Marcel
+    - family-names: Hasegawa
+      given-names: Yosuke
+    - family-names: Stroh
+      given-names: Alexander
+  year: 2026
+  identifiers:
+    - type: doi
+      value: 10.48550/arXiv.2609.20857
+references:
+  - type: dataset
+    title: "URANS simulations and PIV measurements of mitral regurgitation orifice phantoms in a pulsatile in vitro heart simulator"
+    authors:
+      - family-names: Hoffmann
+        given-names: Jakob
+      - family-names: Leister
+        given-names: Robin
+      - family-names: Karl
+        given-names: Roger
+      - family-names: Neff
+        given-names: Luis
+    year: 2026
+    doi: 10.35097/gycyvxthuw98sfpq
+    repository: "RADAR4KIT, Karlsruhe Institute of Technology"
+    license: CC-BY-4.0

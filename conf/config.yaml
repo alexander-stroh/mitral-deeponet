@@ -1,0 +1,73 @@
+
+defaults :
+  - modulus_default
+  - /arch/fully_connected_cfg@arch.branch
+  - /arch/fully_connected_cfg@arch.trunk
+  # - /arch/fourier_cfg@arch.trunk
+  - /arch/deeponet_cfg@arch.deeponet
+  - scheduler: tf_exponential_lr
+  - optimizer: adamw
+  # - loss: grad_norm # for don5
+  - loss: sum # for _ntk
+  - _self_
+           
+cuda_graphs: false # NEW
+# cuda_graph_warmup: 20
+
+arch:
+  branch:
+    nr_layers: 9
+    layer_size: 640
+    adaptive_activations: true
+    activation_fn: "silu"
+  trunk:
+    nr_layers: 9
+    layer_size: 640
+    adaptive_activations: true
+    activation_fn: "silu"
+    # frequencies: "('axis', [0, 1, 2, 3, 4])"
+  deeponet:
+
+# optimizer:
+#   lr: 7.69e-5
+
+scheduler:
+  decay_rate: 0.95
+  decay_steps: 4000
+
+# save_filetypes: "vtk,npz" # NEW
+
+training:
+  save_network_freq: 200
+  rec_validation_freq: 200
+  rec_inference_freq: 200
+  rec_monitor_freq: 200
+  rec_constraint_freq: 200
+  max_steps : 55000
+  ntk:
+    use_ntk: true # NEW
+    run_freq : 100
+    save_name : ntk_don_large_reconstruct # Set cuda_graphs: False if logging ntk value
+  # grad_agg_freq: 4 # NEW
+  amp: false # NEW
+  amp_dtype: false # NEW
+  grad_agg_freq: 4
+
+batch_size:
+  Supervised: 1000
+  NoSlip: 1000
+  Interior: 16000
+  test: 1000
+
+graph:
+  func_arch: true
+
+# initialization_network_dir: Custom location to load pretrained models from
+
+# stop_criterion:
+#   metric: 'l2_relative_error_u' # consistent with the tag used for tensorboard plots
+#   min_delta: 1e-3 # Minimum required change in the metric to qualify as a training improvement
+#   patience: 500 # Number of training steps to wait for a training improvement to happen
+#   mode: 'min' # Choose ‘min’ if the metric is to be minimized
+#   freq: 500 # freq should be a multiplier of the rec_validation_freq or rec_monitor_freq.
+#   strict: true # If True, raises an error in case the metric is not valid

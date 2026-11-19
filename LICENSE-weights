@@ -1,0 +1,12 @@
+The network weights (*.safetensors, pretrained_optimizer.pt), the PIV branch inputs (piv_branch_inputs.npz) and the reference
+outputs (tests/data/reference_outputs.npz) of this repository and its releases are licensed under the Creative Commons
+Attribution 4.0 International License (CC BY 4.0).
+
+Copyright (c) 2026 Jakob Marcel Hoffmann, Yosuke Hasegawa, Alexander Stroh
+
+You are free to share and adapt this material for any purpose, even commercially, provided that you give appropriate credit,
+provide a link to the license, and indicate if changes were made. Please credit the authors by citing the publication and the
+dataset listed in CITATION.cff.
+
+Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
+The weights were trained on the dataset doi:10.35097/gycyvxthuw98sfpq (CC BY 4.0).

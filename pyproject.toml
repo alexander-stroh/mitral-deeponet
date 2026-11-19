@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mitral-deeponet"
+version = "1.0.0"
+description = "DeepONet with test-time adaptation for 4D mitral regurgitation flow from planar velocity data"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Jakob Marcel Hoffmann"}, {name = "Yosuke Hasegawa"}, {name = "Alexander Stroh"}]
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.22", "torch>=2.0", "safetensors>=0.4"]
+
+[project.optional-dependencies]
+data = ["scipy>=1.9", "vtk>=9.2", "netCDF4>=1.6", "matplotlib>=3.5"]
+
+[project.urls]
+Paper = "https://doi.org/10.48550/arXiv.2609.20857"
+Dataset = "https://doi.org/10.35097/gycyvxthuw98sfpq"
+
+[tool.setuptools.packages.find]
+include = ["mitral_deeponet*"]
