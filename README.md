@@ -31,7 +31,7 @@ https://doi.org/10.35097/gycyvxthuw98sfpq.
 ## Installation
 
 ```bash
-git clone https://github.com/OWNER/mitral-deeponet && cd mitral-deeponet
+git clone https://github.com/alexander-stroh/mitral-deeponet && cd mitral-deeponet
 pip install -e .                 # inference only: torch, numpy, safetensors
 pip install -e .[data]           # + preprocessing and evaluation: scipy, vtk, netCDF4, matplotlib
 python -m mitral_deeponet.weights            # download the published checkpoints into weights/

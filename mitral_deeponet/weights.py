@@ -6,7 +6,7 @@ import hashlib
 import os
 import urllib.request
 
-BASE_URL = os.environ.get('MITRAL_DEEPONET_WEIGHTS_URL', 'https://github.com/OWNER/mitral-deeponet/releases/download/v1.0.0')
+BASE_URL = os.environ.get('MITRAL_DEEPONET_WEIGHTS_URL', 'https://github.com/alexander-stroh/mitral-deeponet/releases/download/v1.0.0')
 
 # name: (sha256, description). Provenance in docs/MODELS.md.
 CHECKPOINTS = {
