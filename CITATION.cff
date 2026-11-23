@@ -4,6 +4,7 @@ title: "mitral-deeponet: Deep Operator Network with test-time adaptation for 4D 
 version: 1.0.0
 type: software
 repository-code: "https://github.com/alexander-stroh/mitral-deeponet"
+doi: 10.5281/zenodo.24464090
 license: MIT
 authors:
   - family-names: Hoffmann

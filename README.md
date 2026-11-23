@@ -28,6 +28,8 @@ The data are published separately on RADAR4KIT (CC BY 4.0): J. Hoffmann, R. Leis
 PIV measurements of mitral regurgitation orifice phantoms in a pulsatile in vitro heart simulator" (2026),
 https://doi.org/10.35097/gycyvxthuw98sfpq.
 
+Release v1.0.0 (source code and all weight files) is archived on Zenodo: https://doi.org/10.5281/zenodo.24464090.
+
 ## Installation
 
 ```bash
@@ -128,8 +130,8 @@ The outputs are non-dimensional, phase-averaged (URANS) fields. `to_si()` conver
 4. adapt (about 5 min per case);
 5. evaluate.
 
-It also lists what was verified: the preprocessing reproduces the original training data bit for bit, and the PIV inputs
-to float precision.
+It also lists what was verified: the preprocessing reproduces the original training data (bit for bit with
+`--legacy-pressure`), the targets and the PIV inputs.
 
 ## Intended use and limitations
 
@@ -150,4 +152,5 @@ to float precision.
 
 ## Citation
 
-Please cite the paper and the dataset above (`CITATION.cff`).
+Please cite the paper and the dataset above (`CITATION.cff`). The code and the weights of release v1.0.0 can be cited as
+https://doi.org/10.5281/zenodo.24464090.
