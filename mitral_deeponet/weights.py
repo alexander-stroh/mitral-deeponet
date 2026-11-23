@@ -11,7 +11,7 @@ BASE_URL = os.environ.get('MITRAL_DEEPONET_WEIGHTS_URL', 'https://github.com/OWN
 # name: (sha256, description). Provenance in docs/MODELS.md.
 CHECKPOINTS = {
     'pretrained.safetensors': ('4f77647cbe57a25ba94ad0cf5dc172be1bd848b24773e317ed590c3e229067fc', 'pretrained on the 9 training MROPs, 50,000 steps (baseline)'),
-    'pretrained_optimizer.pt': ('ca24b0a6e7c5a73cc4c8f3f3518029fd6650add83029745aff52c8f84cec14d9', 'optimizer, scheduler and NTK state at the end of pretraining (exact TTA restarts)'),
+    'pretrained_optimizer.pt': ('ca24b0a6e7c5a73cc4c8f3f3518029fd6650add83029745aff52c8f84cec14d9', 'step, AdamW moments and learning-rate schedule at the end of pretraining (TTA restarts as in the paper)'),
     'tta_dropxl_cfd.safetensors': ('3ded484c1022a0ca9a66599be8dd15062d71024570ea4cfa720105cd92217eb8', 'adapted to Drop-XL, CFD plane z* = 0 + virtual pressure probes'),
     'tta_slotlbent_cfd.safetensors': ('1df65bbaaddd0d942fb9d38b69d1e59cd3118632313a92e3d88cdc358986fd67', 'adapted to Slot-L-Bent, CFD plane z* = 0 + virtual pressure probes'),
     'tta_pinholel_piv.safetensors': ('a09ce111eaf4ecaf73856874e5b15778766999e9aa7026600ff8ffc1c5a31339', 'adapted to Pinhole-L, phase-resolved PIV + measured pressures'),

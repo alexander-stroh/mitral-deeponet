@@ -42,7 +42,9 @@ ap.add_argument('--target', help='target file (scripts/prepare_target.py), adapt
 ap.add_argument('--out', required=True)
 ap.add_argument('--init', help='initial weights: .safetensors or Modulus don.0.pth (adapt mode: required)')
 ap.add_argument('--init-optimizer', help='optimizer checkpoint of the initial weights (optim_checkpoint.0.pth); restores the step, '
-                'learning-rate schedule, Adam moments and NTK state of the pretraining. Without it, AdamW starts fresh at --lr.')
+                'learning-rate schedule and Adam moments of the pretraining (paper setting). The NTK weights are not stored; with '
+                'the restored step 50000 they are computed in the first iteration. Without it, AdamW starts fresh at --lr from '
+                'step 0, where Modulus computes the first NTK weights only at step 100 and gives steps 1-99 zero loss weight.')
 ap.add_argument('--steps', type=int, default=None, help='iterations (default: 50000 pretrain, 400 adapt)')
 ap.add_argument('--lr', type=float, default=None, help='initial learning rate if no optimizer checkpoint is given '
                 '(default 1e-3 for pretraining; 1e-3 * 0.95**(50000/4000) for adaptation, i.e. the rate at the end of pretraining)')

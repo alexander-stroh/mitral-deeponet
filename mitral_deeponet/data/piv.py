@@ -52,7 +52,7 @@ def to_model(x, y, u, v, angle, offset):
 
 
 class PIVCampaign:
-    """>>> p = PIVCampaign('/data/radar/PIV', 'EccJet'); bu, bv, tstar, T = p.branch_inputs()"""
+    """>>> p = PIVCampaign('/data/radar/PIV', 'EccJet'); bu, bv, tstar, T, phases = p.branch_inputs()"""
 
     def __init__(self, root, case, plane='0mm'):
         self.case, self.cfg = case, CAMPAIGNS[case]

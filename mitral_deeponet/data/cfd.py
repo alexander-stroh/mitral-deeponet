@@ -11,8 +11,11 @@ The preprocessing reproduces the pipeline used to train the published networks:
 4. branch input: cut the clipped domain with the plane z* = 0 (vtkCutter) and interpolate u*, v* linearly (scipy griddata)
    onto the 10738 points of grid.branch_grid(), optionally shifted in x (Slot-L-Bent: +0.064).
 
-Snapshots without a pressure file (first/last step of a simulation run, see the dataset README) receive the pressure of the
-nearest snapshot with valid pressure, as in the original pipeline.
+Pressure of the first and last snapshot. Snapshots without a pressure file (first/last step of a simulation run, see the
+dataset README) receive the pressure of the nearest snapshot with valid pressure. The original pipeline replaced the pressure
+of the first snapshot by that of the second and the pressure of the last by that of the second-to-last in every case, also
+where the published snapshot has a valid pressure (first snapshot of Drop-S, Pinhole-S, Pinhole-L and Drop-XL). The default
+keeps the valid values; legacy_pressure=True reproduces the original arrays exactly.
 Requires vtk (tested with 9.3.0) and scipy."""
 import math
 import os
@@ -62,7 +65,7 @@ class CFDCase:
     >>> bu, bv = c.branch(10)            # branch input (10738,), (10738,)
     """
 
-    def __init__(self, root, case):
+    def __init__(self, root, case, legacy_pressure=False):
         import vtk
         self.vtk = vtk
         vtk.vtkObject.GlobalWarningDisplayOff()                 # polyhedral cells: harmless "non-manifold" contour warnings
@@ -78,6 +81,7 @@ class CFDCase:
         self.reader = r
         self.p_valid = _pressure_steps(self.file)          # snapshot indices with pressure
         self.shift = BRANCH_SHIFT.get(case, 0.0)
+        self.legacy_pressure = legacy_pressure
         self._clipped = {}
 
     def __len__(self):
@@ -107,8 +111,12 @@ class CFDCase:
     def clipped(self, i):
         """vtkUnstructuredGrid of snapshot i in the model frame (non-dimensional coordinates, dimensional fields)."""
         g = self._transform(self._read(i))
-        if i not in set(self.p_valid.tolist()):          # replace the missing pressure by that of the nearest valid snapshot
+        j = None
+        if self.legacy_pressure and i in (0, len(self) - 1):   # original pipeline: first <- second, last <- second-to-last
+            j = 1 if i == 0 else len(self) - 2
+        elif i not in set(self.p_valid.tolist()):         # replace the missing pressure by that of the nearest valid snapshot
             j = int(self.p_valid[np.argmin(np.abs(self.p_valid - i))])
+        if j is not None:
             src = self._transform(self._read(j)).GetPointData().GetArray('p')
             g.GetPointData().RemoveArray('p')
             g.GetPointData().AddArray(src)

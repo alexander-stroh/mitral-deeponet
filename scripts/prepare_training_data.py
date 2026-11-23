@@ -9,8 +9,12 @@ Output (<out>/): meta.json; branch_u.f32, branch_v.f32 (n_snapshots x 10738), br
 arrays x, y, z, u, v, w, p, nu_t (.f32) and snap.i32 (snapshot index of each point). Raw little-endian binaries, read with
 np.memmap using the shapes in meta.json (mitral_deeponet.data.TrainingSet).
 
+--legacy-pressure reproduces the arrays of the original training pipeline exactly: it replaces the pressure of the first
+snapshot of every case by that of the second, also where the published first snapshot is valid (Drop-S, Pinhole-S,
+Pinhole-L; see mitral_deeponet/data/cfd.py). Without it these three snapshots keep their valid pressure.
+
 Usage: python scripts/prepare_training_data.py --data <radar root> --out <dir> [--fraction 1.0] [--cases Drop-S,...]
-                                               [--exclude Slot-M] [--workers 16] [--seed 2026]"""
+                                               [--exclude Slot-M] [--workers 16] [--seed 2026] [--legacy-pressure]"""
 import argparse
 import json
 import os
@@ -28,9 +32,9 @@ _case = {}
 
 
 def work(args):
-    root, case, ci, i, fraction, seed = args
+    root, case, ci, i, fraction, seed, legacy = args
     if case not in _case:
-        _case.clear(); _case[case] = CFDCase(root, case)
+        _case.clear(); _case[case] = CFDCase(root, case, legacy_pressure=legacy)
     c = _case[case]
     g = c.clipped(i)
     xyz, F = c.snapshot(i, grid=g)
@@ -50,18 +54,21 @@ def main():
     ap.add_argument('--fraction', type=float, default=1.0)
     ap.add_argument('--seed', type=int, default=2026)
     ap.add_argument('--workers', type=int, default=8)
+    ap.add_argument('--legacy-pressure', action='store_true',
+                    help='first/last snapshot pressure as in the original pipeline (copied from the neighbouring snapshot)')
     A = ap.parse_args()
     cases = [c for c in A.cases.split(',') if c and c not in A.exclude.split(',')]
     os.makedirs(A.out, exist_ok=True)
     fh = {k: open(os.path.join(A.out, f'{k}.f32'), 'wb') for k in KEYS + ('branch_u', 'branch_v', 'branch_t')}
     fs = open(os.path.join(A.out, 'snap.i32'), 'wb')
-    meta = dict(cases=[], fraction=A.fraction, seed=A.seed, n_branch=10738, dataset='doi:10.35097/gycyvxthuw98sfpq')
+    meta = dict(cases=[], fraction=A.fraction, seed=A.seed, n_branch=10738, legacy_pressure=A.legacy_pressure,
+                dataset='doi:10.35097/gycyvxthuw98sfpq')
     t0 = time.time(); s = 0; n = 0
     for ci, case in enumerate(cases):
         nsnap = len(CFDCase(A.data, case))
         info = dict(case=case, first_snapshot=s, n_snapshots=nsnap, points=[], tstar=[], T=[])
         with Pool(A.workers) as pool:
-            for i, ts, T, bu, bv, P in pool.imap(work, [(A.data, case, ci, i, A.fraction, A.seed) for i in range(nsnap)], chunksize=2):
+            for i, ts, T, bu, bv, P in pool.imap(work, [(A.data, case, ci, i, A.fraction, A.seed, A.legacy_pressure) for i in range(nsnap)], chunksize=2):
                 if not (np.isfinite(bu).all() and np.isfinite(bv).all()):
                     raise ValueError(f'{case} snapshot {i}: NaN in the branch input')
                 for k, col in zip(KEYS, P.T):

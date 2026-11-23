@@ -71,10 +71,12 @@ release. `docs/MODELS.md` lists their provenance and checksums.
 | `tta_pinholel_piv` | Pinhole-L | phase-resolved PIV + measured LV/LA pressures |
 | `tta_slotl_piv` | Slot-L | phase-resolved PIV + measured LV/LA pressures |
 | `tta_dropxl_piv` | Drop-XL | phase-resolved PIV + measured LV/LA pressures |
-| `tta_eccjet_piv` | EccJet (unseen eccentric jet) | phase-resolved PIV + measured LV/LA pressures |
+| `tta_eccjet_piv` | EccJet (unseen eccentric jet) | phase-resolved PIV (no pressures) |
 
 All adapted checkpoints start from `pretrained` (step 50,000) and end at step 50,400. `pretrained_optimizer.pt` holds the
-optimizer, learning-rate and NTK state at the end of pretraining, so that new adaptations start exactly as in the paper.
+step counter, the AdamW moments and the learning-rate schedule at the end of pretraining, so that new adaptations start as
+in the paper. The NTK loss weights are not stored: they are recomputed in the first adaptation step (step 50,000), as in the
+original runs.
 
 The parameter names are those of NVIDIA Modulus Sym 1.5.0. The files therefore also load with `strict=True` into a
 `DeepONetArch` built from two `FullyConnectedArch` sub-networks (`layer_size=640, nr_layers=9, activation_fn=silu,
@@ -102,7 +104,7 @@ The trunk takes (x*, y*, z*, t*) in the model frame, a jet-aligned Cartesian fra
 - x along the regurgitant jet into the left atrium;
 - z normal to the PIV plane.
 
-t* = (T mod 0.75 s) / 0.75 s is the phase in the cardiac cycle (80 bpm). For Slot-L-Bent, the branch window and the
+t* = (T − T₀) / 0.75 s ∈ [0, 1] is the phase in the cardiac cycle (80 bpm), with T₀ the start of the simulated cycle. For Slot-L-Bent, the branch window and the
 adaptation were shifted by 6.4 mm, x*_model = x*_CFD − 0.064.
 
 ### Outputs

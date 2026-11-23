@@ -2,8 +2,10 @@
 
 Non-dimensionalization (the network sees and returns only non-dimensional quantities):
     x* = x / L_C                 L_C   = 0.1 m          (all three coordinates)
-    t* = (T mod T_C) / T_C       T_C   = 0.75 s         (phase within the cardiac cycle, 80 bpm; t* in [0, 1))
-    u* = u / U_C                 U_C   = 4.988348484039307 m/s   (max |velocity component| over the CFD database)
+    t* = (T - T_0) / T_C         T_C   = 0.75 s         (phase within the cardiac cycle, 80 bpm; T_0 = start of the cycle
+                                  that contains the first snapshot, so t* in [0, 1]; see data.cfd.rescale_time. This equals
+                                  (T mod T_C) / T_C except for a snapshot at the very end of the cycle, which gets t* = 1)
+    u* = u / U_C                 U_C   = 4.988348484039307 m/s   (largest velocity component in the CFD database)
     p* = p / P_C                 P_C   = 13439.0517578125 Pa     (max static pressure over the CFD database)
     nu_t* = nu_t / NU_T_C        NU_T_C = MU_T_C / RHO = 3.917e-4 m^2/s (max eddy viscosity over the database; the training
                                   pipeline divided the dynamic turbulent viscosity exported by STAR-CCM+ by MU_T_C =
